@@ -34,6 +34,7 @@ import org.springframework.util.ObjectUtils;
  * @author Juergen Hoeller
  * @since 1.2.6
  * @see java.io.Reader
+ * 指定编码的Resource
  */
 public class EncodedResource {
 

@@ -28,6 +28,7 @@ package org.springframework.beans.factory;
  * @author Juergen Hoeller
  * @since 07.07.2003
  * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#setParentBeanFactory
+ * 增加了获取父BeanFactory的配置功能，使BeanFactory具备双亲IOC容器的管理功能
  */
 public interface HierarchicalBeanFactory extends BeanFactory {
 	

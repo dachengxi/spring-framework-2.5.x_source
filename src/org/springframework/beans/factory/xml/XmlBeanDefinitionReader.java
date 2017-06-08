@@ -123,7 +123,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	private ErrorHandler errorHandler = new SimpleSaxErrorHandler(logger);
 
 	private final XmlValidationModeDetector validationModeDetector = new XmlValidationModeDetector();
-
+	//已经被加载的Resource
 	private final ThreadLocal resourcesCurrentlyBeingLoaded =
 			new NamedThreadLocal("XML bean definition resources currently being loaded");
 
@@ -322,7 +322,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		if (logger.isInfoEnabled()) {
 			logger.info("Loading XML bean definitions from " + encodedResource.getResource());
 		}
-
+		//已经被加载的资源
 		Set currentResources = (Set) this.resourcesCurrentlyBeingLoaded.get();
 		if (currentResources == null) {
 			currentResources = new HashSet(4);
@@ -333,12 +333,14 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 					"Detected recursive loading of " + encodedResource + " - check your import definitions!");
 		}
 		try {
+			//得到xml文件，并得到io的InputSource准备进行读取
 			InputStream inputStream = encodedResource.getResource().getInputStream();
 			try {
 				InputSource inputSource = new InputSource(inputStream);
 				if (encodedResource.getEncoding() != null) {
 					inputSource.setEncoding(encodedResource.getEncoding());
 				}
+				//真正加载BeanDefinition的地方
 				return doLoadBeanDefinitions(inputSource, encodedResource.getResource());
 			}
 			finally {
@@ -388,13 +390,16 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @param resource the resource descriptor for the XML file
 	 * @return the number of bean definitions found
 	 * @throws BeanDefinitionStoreException in case of loading or parsing errors
+	 * 从xml中载入BeanDefinition
 	 */
 	protected int doLoadBeanDefinitions(InputSource inputSource, Resource resource)
 			throws BeanDefinitionStoreException {
 		try {
 			int validationMode = getValidationModeForResource(resource);
+			//取得xml的Document对象
 			Document doc = this.documentLoader.loadDocument(
 					inputSource, getEntityResolver(), this.errorHandler, validationMode, isNamespaceAware());
+			//注册BeanDefinition，也是对BeanDefinition解析的详细过程
 			return registerBeanDefinitions(doc, resource);
 		}
 		catch (BeanDefinitionStoreException ex) {
@@ -496,14 +501,18 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 */
 	public int registerBeanDefinitions(Document doc, Resource resource) throws BeanDefinitionStoreException {
 		// Support old XmlBeanDefinitionParser SPI for backwards-compatibility.
+		//支持原来的XmlBeanDefinitionParser进行解析
 		if (this.parserClass != null) {
 			XmlBeanDefinitionParser parser =
 					(XmlBeanDefinitionParser) BeanUtils.instantiateClass(this.parserClass);
 			return parser.registerBeanDefinitions(this, doc, resource);
 		}
 		// Read document based on new BeanDefinitionDocumentReader SPI.
+		//BeanDefinitionDocumentReader对xml的BeanDefinition进行解析
+		//这里创建的是DefaultBeanDefinitionDocumentReader
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
 		int countBefore = getRegistry().getBeanDefinitionCount();
+		//解析BeanDefinition
 		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
 		return getRegistry().getBeanDefinitionCount() - countBefore;
 	}

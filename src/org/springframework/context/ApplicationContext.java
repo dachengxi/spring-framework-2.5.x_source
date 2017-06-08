@@ -52,6 +52,12 @@ import org.springframework.core.io.support.ResourcePatternResolver;
  * @see ConfigurableApplicationContext
  * @see org.springframework.beans.factory.BeanFactory
  * @see org.springframework.core.io.ResourceLoader
+ * 继承了MessageSource接口，支持不同的信息源，支持国际化的实现
+ *
+ * 可以访问资源
+ *
+ * 支持应用事件
+ *
  */
 public interface ApplicationContext extends ListableBeanFactory, HierarchicalBeanFactory,
 		MessageSource, ApplicationEventPublisher, ResourcePatternResolver {

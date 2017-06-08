@@ -78,7 +78,8 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	 * Create a new FileSystemXmlApplicationContext, loading the definitions
 	 * from the given XML file and automatically refreshing the context.
 	 * @param configLocation file path
-	 * @throws BeansException if context creation failed
+	 * @throws BeansException if context creation failed\
+	 * 构造，指定配置文件路径
 	 */
 	public FileSystemXmlApplicationContext(String configLocation) throws BeansException {
 		this(new String[] {configLocation}, true, null);
@@ -89,6 +90,7 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	 * from the given XML files and automatically refreshing the context.
 	 * @param configLocations array of file paths
 	 * @throws BeansException if context creation failed
+	 * 构造，可以指定多个配置文件路径
 	 */
 	public FileSystemXmlApplicationContext(String[] configLocations) throws BeansException {
 		this(configLocations, true, null);
@@ -101,6 +103,7 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	 * @param configLocations array of file paths
 	 * @param parent the parent context
 	 * @throws BeansException if context creation failed
+	 * 可以指定自己的双亲容器
 	 */
 	public FileSystemXmlApplicationContext(String[] configLocations, ApplicationContext parent) throws BeansException {
 		this(configLocations, true, parent);
@@ -115,6 +118,7 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	 * Alternatively, call refresh manually after further configuring the context.
 	 * @throws BeansException if context creation failed
 	 * @see #refresh()
+	 * 可以指定是否自动刷新
 	 */
 	public FileSystemXmlApplicationContext(String[] configLocations, boolean refresh) throws BeansException {
 		this(configLocations, refresh, null);
@@ -136,6 +140,7 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 
 		super(parent);
 		setConfigLocations(configLocations);
+		//启动了BeanDefinition的载入过程
 		if (refresh) {
 			refresh();
 		}
@@ -150,6 +155,7 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	 * @param path path to the resource
 	 * @return Resource handle
 	 * @see org.springframework.web.context.support.XmlWebApplicationContext#getResourceByPath
+	 * 获取文件系统Resource的实现
 	 */
 	protected Resource getResourceByPath(String path) {
 		if (path != null && path.startsWith("/")) {

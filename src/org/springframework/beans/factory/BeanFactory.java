@@ -103,6 +103,8 @@ import org.springframework.beans.BeansException;
  * @see DisposableBean#destroy
  * @see org.springframework.beans.factory.support.RootBeanDefinition#getDestroyMethodName
  * IOC容器的核心接口，职责包括：实例化，定位，配置程序中的对象以及建立这些对象间的依赖
+ *
+ * 定义了基本的IOC容器的规范
  */
 public interface BeanFactory {
 
@@ -111,6 +113,7 @@ public interface BeanFactory {
 	 * beans <i>created</i> by the FactoryBean. For example, if the bean named
 	 * <code>myJndiObject</code> is a FactoryBean, getting <code>&myJndiObject</code>
 	 * will return the factory, not the instance returned by the factory.
+	 * 得到FactoryBean本身
 	 */
 	String FACTORY_BEAN_PREFIX = "&";
 
