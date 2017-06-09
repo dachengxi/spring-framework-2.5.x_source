@@ -44,6 +44,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 
 		// Don't override the class with CGLIB if no overrides.
 		if (beanDefinition.getMethodOverrides().isEmpty()) {
+			//取得指定的构造器或者生成对象的工厂方法来对bean进行实例化
 			Constructor constructorToUse = (Constructor) beanDefinition.resolvedConstructorOrFactoryMethod;
 			if (constructorToUse == null) {
 				Class clazz = beanDefinition.getBeanClass();
@@ -58,10 +59,12 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 					throw new BeanInstantiationException(clazz, "No default constructor found", ex);
 				}
 			}
+			//使用BeanUtils进行实例化，通过Constructor来实例化bean
 			return BeanUtils.instantiateClass(constructorToUse, null);
 		}
 		else {
 			// Must generate CGLIB subclass.
+			//使用CGLIB来实例化对象
 			return instantiateWithMethodInjection(beanDefinition, beanName, owner);
 		}
 	}

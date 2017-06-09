@@ -99,10 +99,12 @@ class BeanDefinitionValueResolver {
 	public Object resolveValueIfNecessary(Object argName, Object value) {
 		// We must check each value to see whether it requires a runtime reference
 		// to another bean to be resolved.
+		//RuntimeBeanReference
 		if (value instanceof RuntimeBeanReference) {
 			RuntimeBeanReference ref = (RuntimeBeanReference) value;
 			return resolveReference(argName, ref);
 		}
+		//RuntimeBeanNameReference
 		else if (value instanceof RuntimeBeanNameReference) {
 			String ref = ((RuntimeBeanNameReference) value).getBeanName();
 			if (!this.beanFactory.containsBean(ref)) {
@@ -111,6 +113,7 @@ class BeanDefinitionValueResolver {
 			}
 			return ref;
 		}
+		//BeanDefinitionHolder
 		else if (value instanceof BeanDefinitionHolder) {
 			// Resolve BeanDefinitionHolder: contains BeanDefinition with name and aliases.
 			BeanDefinitionHolder bdHolder = (BeanDefinitionHolder) value;
@@ -256,6 +259,7 @@ class BeanDefinitionValueResolver {
 	 */
 	private Object resolveReference(Object argName, RuntimeBeanReference ref) {
 		try {
+			//ref在双亲容器中，先去双亲容器获取
 			if (ref.isToParent()) {
 				if (this.beanFactory.getParentBeanFactory() == null) {
 					throw new BeanCreationException(
@@ -265,7 +269,7 @@ class BeanDefinitionValueResolver {
 				}
 				return this.beanFactory.getParentBeanFactory().getBean(ref.getBeanName());
 			}
-			else {
+			else {//当前容器中获取
 				Object bean = this.beanFactory.getBean(ref.getBeanName());
 				this.beanFactory.registerDependentBean(ref.getBeanName(), this.beanName);
 				return bean;
