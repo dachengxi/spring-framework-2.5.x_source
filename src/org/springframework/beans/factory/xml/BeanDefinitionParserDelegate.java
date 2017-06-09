@@ -955,6 +955,7 @@ public class BeanDefinitionParserDelegate {
 		if (!isDefaultNamespace(ele.getNamespaceURI())) {
 			return parseNestedCustomElement(ele, bd);
 		}
+		//bean
 		else if (DomUtils.nodeNameEquals(ele, BEAN_ELEMENT)) {
 			BeanDefinitionHolder nestedBd = parseBeanDefinitionElement(ele, bd);
 			if (nestedBd != null) {
@@ -962,6 +963,7 @@ public class BeanDefinitionParserDelegate {
 			}
 			return nestedBd;
 		}
+		//ref
 		else if (DomUtils.nodeNameEquals(ele, REF_ELEMENT)) {
 			// A generic reference to any name of any bean.
 			String refName = ele.getAttribute(BEAN_REF_ATTRIBUTE);
@@ -987,12 +989,15 @@ public class BeanDefinitionParserDelegate {
 			ref.setSource(extractSource(ele));
 			return ref;
 		}
+		//idref
 		else if (DomUtils.nodeNameEquals(ele, IDREF_ELEMENT)) {
 			return parseIdRefElement(ele);
 		}
+		//value
 		else if (DomUtils.nodeNameEquals(ele, VALUE_ELEMENT)) {
 			return parseValueElement(ele, defaultTypeClassName);
 		}
+		//null
 		else if (DomUtils.nodeNameEquals(ele, NULL_ELEMENT)) {
 			// It's a distinguished null value. Let's wrap it in a TypedStringValue
 			// object in order to preserve the source location.
@@ -1000,15 +1005,19 @@ public class BeanDefinitionParserDelegate {
 			nullHolder.setSource(extractSource(ele));
 			return nullHolder;
 		}
+		//list
 		else if (DomUtils.nodeNameEquals(ele, LIST_ELEMENT)) {
 			return parseListElement(ele, bd);
 		}
+		//set
 		else if (DomUtils.nodeNameEquals(ele, SET_ELEMENT)) {
 			return parseSetElement(ele, bd);
 		}
+		//map
 		else if (DomUtils.nodeNameEquals(ele, MAP_ELEMENT)) {
 			return parseMapElement(ele, bd);
 		}
+		//props
 		else if (DomUtils.nodeNameEquals(ele, PROPS_ELEMENT)) {
 			return parsePropsElement(ele);
 		}

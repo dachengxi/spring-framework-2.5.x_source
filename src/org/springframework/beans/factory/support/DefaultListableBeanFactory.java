@@ -453,10 +453,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 						"Validation of bean definition failed", ex);
 			}
 		}
-
+		//注册过程需要同步，保证数据一致性
 		synchronized (this.beanDefinitionMap) {
 			Object oldBeanDefinition = this.beanDefinitionMap.get(beanName);
 			if (oldBeanDefinition != null) {
+				//相同名字的不允许覆盖
 				if (!this.allowBeanDefinitionOverriding) {
 					throw new BeanDefinitionStoreException(beanDefinition.getResourceDescription(), beanName,
 							"Cannot register bean definition [" + beanDefinition + "] for bean '" + beanName +
@@ -470,9 +471,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				}
 			}
 			else {
+				//名字加入到beanDefinitionNames中去
 				this.beanDefinitionNames.add(beanName);
 				this.frozenBeanDefinitionNames = null;
 			}
+			//beanName作为key，BeanDefinition作为value放入到beanDefinitionMap中
 			this.beanDefinitionMap.put(beanName, beanDefinition);
 
 			resetBeanDefinition(beanName);
