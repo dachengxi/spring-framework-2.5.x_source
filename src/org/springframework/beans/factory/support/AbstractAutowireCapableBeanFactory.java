@@ -479,6 +479,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		try {
 			//填充属性
 			populateBean(beanName, mbd, instanceWrapper);
+			//bean初始化
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
 		}
 		catch (Throwable ex) {
@@ -1348,6 +1349,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		try {
+			//调用initMethod，init-method或者是实现InitializingBean接口的bean
 			invokeInitMethods(beanName, wrappedBean, mbd);
 		}
 		catch (Throwable ex) {
@@ -1378,16 +1380,18 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			throws Throwable {
 
 		boolean isInitializingBean = (bean instanceof InitializingBean);
+		//实现了InitializingBean接口，就回调afterPropertiesSet方法
 		if (isInitializingBean && (mbd == null || !mbd.isExternallyManagedInitMethod("afterPropertiesSet"))) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Invoking afterPropertiesSet() on bean with name '" + beanName + "'");
 			}
 			((InitializingBean) bean).afterPropertiesSet();
 		}
-
+		//配置了init-method
 		String initMethodName = (mbd != null ? mbd.getInitMethodName() : null);
 		if (initMethodName != null && !(isInitializingBean && "afterPropertiesSet".equals(initMethodName)) &&
 				!mbd.isExternallyManagedInitMethod(initMethodName)) {
+			//调用自定义的initmethod
 			invokeCustomInitMethod(beanName, bean, initMethodName, mbd.isEnforceInitMethod());
 		}
 	}
