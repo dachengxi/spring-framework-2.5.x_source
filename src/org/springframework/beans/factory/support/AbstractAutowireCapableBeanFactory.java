@@ -345,6 +345,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			throws BeansException {
 
 		Object result = existingBean;
+		//遍历beanPostProcessors，依次回调
 		for (Iterator it = getBeanPostProcessors().iterator(); it.hasNext();) {
 			BeanPostProcessor beanProcessor = (BeanPostProcessor) it.next();
 			result = beanProcessor.postProcessBeforeInitialization(result, beanName);
@@ -356,6 +357,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			throws BeansException {
 
 		Object result = existingBean;
+		//遍历beanPostProcessors，依次回调
 		for (Iterator it = getBeanPostProcessors().iterator(); it.hasNext();) {
 			BeanPostProcessor beanProcessor = (BeanPostProcessor) it.next();
 			result = beanProcessor.postProcessAfterInitialization(result, beanName);
@@ -1331,20 +1333,22 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 * @see #applyBeanPostProcessorsAfterInitialization
 	 */
 	protected Object initializeBean(String beanName, Object bean, RootBeanDefinition mbd) {
+		//设置bean名字
 		if (bean instanceof BeanNameAware) {
 			((BeanNameAware) bean).setBeanName(beanName);
 		}
-
+		//设置类加载器
 		if (bean instanceof BeanClassLoaderAware) {
 			((BeanClassLoaderAware) bean).setBeanClassLoader(getBeanClassLoader());
 		}
-
+		//设置BeanFactory
 		if (bean instanceof BeanFactoryAware) {
 			((BeanFactoryAware) bean).setBeanFactory(this);
 		}
 
 		Object wrappedBean = bean;
 		if (mbd == null || !mbd.isSynthetic()) {
+			//对BeanPostProcessor的postProcessBeforeInitialization方法的回调
 			wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
 		}
 
@@ -1359,6 +1363,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		if (mbd == null || !mbd.isSynthetic()) {
+			//对BeanPostProcessor的postProcessAfterInitialization方法的回调
 			wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
 		}
 		return wrappedBean;
