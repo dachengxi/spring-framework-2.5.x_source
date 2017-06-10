@@ -33,6 +33,7 @@ import org.springframework.util.PatternMatchUtils;
  * @author Rob Harrop
  * @since 11.02.2004
  * @see #isMatch
+ * 通过方法名进行Advice匹配
  */
 public class NameMatchMethodPointcut extends StaticMethodMatcherPointcut implements Serializable {
 
@@ -78,7 +79,7 @@ public class NameMatchMethodPointcut extends StaticMethodMatcherPointcut impleme
 		return this;
 	}
 
-
+	//方法名相同或者方法名匹配
 	public boolean matches(Method method, Class targetClass) {
 		for (int i = 0; i < this.mappedNames.size(); i++) {
 			String mappedName = (String) this.mappedNames.get(i);

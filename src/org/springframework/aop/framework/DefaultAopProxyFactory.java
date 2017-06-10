@@ -60,6 +60,7 @@ public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
 				throw new AopConfigException("TargetSource cannot determine target class: " +
 						"Either an interface or a target is required for proxy creation.");
 			}
+			//如果是接口类，使用jdk动态代理生成proxy
 			if (targetClass.isInterface()) {
 				return new JdkDynamicAopProxy(config);
 			}
@@ -68,6 +69,7 @@ public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
 						"Cannot proxy target class because CGLIB2 is not available. " +
 						"Add CGLIB to the class path or specify proxy interfaces.");
 			}
+			//如果不是接口类，使用CGLIB来生成
 			return CglibProxyFactory.createCglibProxy(config);
 		}
 		else {
