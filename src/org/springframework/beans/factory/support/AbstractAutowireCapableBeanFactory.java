@@ -1020,6 +1020,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					}
 				}
 			}
+			//依赖检查
 			if (needsDepCheck) {
 				checkDependencies(beanName, mbd, filteredPds, pvs);
 			}
@@ -1039,11 +1040,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 */
 	protected void autowireByName(
 			String beanName, AbstractBeanDefinition mbd, BeanWrapper bw, MutablePropertyValues pvs) {
-
+		//先得到属性的名字
 		String[] propertyNames = unsatisfiedNonSimpleProperties(mbd, bw);
 		for (int i = 0; i < propertyNames.length; i++) {
 			String propertyName = propertyNames[i];
 			if (containsBean(propertyName)) {
+				//根据名字获取bean
 				Object bean = getBean(propertyName);
 				pvs.addPropertyValue(propertyName, bean);
 				registerDependentBean(propertyName, beanName);
