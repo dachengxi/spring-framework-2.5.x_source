@@ -88,6 +88,7 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 			synchronized (getSingletonMutex()) {
 				Object object = this.factoryBeanObjectCache.get(beanName);
 				if (object == null) {
+					//从FactoryBean中国获取Bean
 					object = doGetObjectFromFactoryBean(factory, beanName, shouldPostProcess);
 					this.factoryBeanObjectCache.put(beanName, (object != null ? object : NULL_OBJECT));
 				}
@@ -118,6 +119,7 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 				Object object;
 
 				try {
+					//调用Factory的getObject方法，从FactoryBean中获取Bean
 					object = factory.getObject();
 				}
 				catch (FactoryBeanNotInitializedException ex) {
