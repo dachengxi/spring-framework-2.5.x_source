@@ -303,6 +303,7 @@ public abstract class AopUtils {
 
 		// Use reflection to invoke the method.
 		try {
+			//使用反射调用target对象方法
 			ReflectionUtils.makeAccessible(method);
 			return method.invoke(target, args);
 		}

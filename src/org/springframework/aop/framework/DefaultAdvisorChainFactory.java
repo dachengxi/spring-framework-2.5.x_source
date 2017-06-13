@@ -44,12 +44,21 @@ import org.springframework.aop.support.MethodMatchers;
  * @since 2.0.3
  */
 public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializable {
-
+	/**
+	 * 获取拦截器链
+	 * @param config the AOP configuration in the form of an Advised object
+	 * @param method the proxied method
+	 * @param targetClass the target class
+	 * @return
+	 */
 	public List getInterceptorsAndDynamicInterceptionAdvice(Advised config, Method method, Class targetClass) {
 		// This is somewhat tricky... we have to process introductions first,
 		// but we need to preserve order in the ultimate list.
+		//拦截器List，长度是由配置的通知器个数来决定，也就是xml中ProxyFactoryBean的interceptNames属性的配置
 		List interceptorList = new ArrayList(config.getAdvisors().length);
+		//判断是否是引介
 		boolean hasIntroductions = hasMatchingIntroductions(config, targetClass);
+		//AdvisorAdapterRegistry实现拦截器的注册
 		AdvisorAdapterRegistry registry = GlobalAdvisorAdapterRegistry.getInstance();
 		Advisor[] advisors = config.getAdvisors();
 		for (int i = 0; i < advisors.length; i++) {

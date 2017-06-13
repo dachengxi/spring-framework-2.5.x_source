@@ -30,6 +30,7 @@ import org.springframework.util.Assert;
  * to use this class directly.
  *
  * @author Rod Johnson
+ * 对MethodBeforeAdvice通知进行封装
  */
 public class MethodBeforeAdviceInterceptor implements MethodInterceptor, Serializable {
 
@@ -45,7 +46,14 @@ public class MethodBeforeAdviceInterceptor implements MethodInterceptor, Seriali
 		this.advice = advice;
 	}
 
+	/**
+	 * 拦截器的回调方法，会在代理对象的方法被调用时触发回调
+	 * @param mi
+	 * @return
+	 * @throws Throwable
+	 */
 	public Object invoke(MethodInvocation mi) throws Throwable {
+		//先是对advice的before的回调，然后是MethodInvocation的proceed调用
 		this.advice.before(mi.getMethod(), mi.getArguments(), mi.getThis() );
 		return mi.proceed();
 	}
