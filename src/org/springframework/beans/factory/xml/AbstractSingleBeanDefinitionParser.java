@@ -81,6 +81,7 @@ public abstract class AbstractSingleBeanDefinitionParser extends AbstractBeanDef
 			// Default-lazy-init applies to custom bean definitions as well.
 			builder.setLazyInit(true);
 		}
+		//调用子类方法进行解析
 		doParse(element, parserContext, builder);
 		return builder.getBeanDefinition();
 	}
