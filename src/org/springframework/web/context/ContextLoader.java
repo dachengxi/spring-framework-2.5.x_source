@@ -177,7 +177,7 @@ public class ContextLoader {
 	 */
 	public WebApplicationContext initWebApplicationContext(ServletContext servletContext)
 			throws IllegalStateException, BeansException {
-
+		//已经存在根上下文，抛异常
 		if (servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE) != null) {
 			throw new IllegalStateException(
 					"Cannot initialize context because there is already a root application context present - " +
@@ -192,10 +192,12 @@ public class ContextLoader {
 
 		try {
 			// Determine parent for root web application context, if any.
+			//载入根上下文的双亲上下文
 			ApplicationContext parent = loadParentContext(servletContext);
 
 			// Store context in local instance variable, to guarantee that
 			// it is available on ServletContext shutdown.
+			//创建根上下文
 			this.context = createWebApplicationContext(servletContext, parent);
 			servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, this.context);
 			currentContextPerThread.put(Thread.currentThread().getContextClassLoader(), this.context);
@@ -236,16 +238,17 @@ public class ContextLoader {
 	 * @return the root WebApplicationContext
 	 * @throws BeansException if the context couldn't be initialized
 	 * @see ConfigurableWebApplicationContext
+	 * 创建根上下文
 	 */
 	protected WebApplicationContext createWebApplicationContext(
 			ServletContext servletContext, ApplicationContext parent) throws BeansException {
-
+		//判断使用什么样的类在web容器中作为ioc容器
 		Class contextClass = determineContextClass(servletContext);
 		if (!ConfigurableWebApplicationContext.class.isAssignableFrom(contextClass)) {
 			throw new ApplicationContextException("Custom context class [" + contextClass.getName() +
 					"] is not of type [" + ConfigurableWebApplicationContext.class.getName() + "]");
 		}
-
+		//实例化一个ioc容器，设置参数，并调用refresh启动容器的初始化
 		ConfigurableWebApplicationContext wac =
 				(ConfigurableWebApplicationContext) BeanUtils.instantiateClass(contextClass);
 		wac.setParent(parent);
@@ -267,8 +270,9 @@ public class ContextLoader {
 	 * @see org.springframework.web.context.support.XmlWebApplicationContext
 	 */
 	protected Class determineContextClass(ServletContext servletContext) throws ApplicationContextException {
+		//可以指定contextClass属性，来指定ioc容器
 		String contextClassName = servletContext.getInitParameter(CONTEXT_CLASS_PARAM);
-		if (contextClassName != null) {
+		if (contextClassName != null) {//有指定contextClass，则使用指定的类来作为ioc容器
 			try {
 				return ClassUtils.forName(contextClassName);
 			}
@@ -277,7 +281,7 @@ public class ContextLoader {
 						"Failed to load custom context class [" + contextClassName + "]", ex);
 			}
 		}
-		else {
+		else {//如果没有指定contextClass属性，默认使用XmlWebApplicationContext作为ioc容器
 			contextClassName = defaultStrategies.getProperty(WebApplicationContext.class.getName());
 			try {
 				return ClassUtils.forName(contextClassName, ContextLoader.class.getClassLoader());

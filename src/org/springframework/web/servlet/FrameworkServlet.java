@@ -279,6 +279,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		long startTime = System.currentTimeMillis();
 
 		try {
+			//初始化上下文
 			this.webApplicationContext = initWebApplicationContext();
 			initFrameworkServlet();
 		}
@@ -311,6 +312,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		WebApplicationContext wac = findWebApplicationContext();
 		if (wac == null) {
 			// No fixed context defined for this servlet - create a local one.
+			//得到根上下文，根上下文保存在ServletContext中
+			//这个根上下文作为当前mvc上下文的双亲上下文
 			WebApplicationContext parent =
 					WebApplicationContextUtils.getWebApplicationContext(getServletContext());
 			wac = createWebApplicationContext(parent);
@@ -321,7 +324,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			// triggering initial onRefresh manually here.
 			onRefresh(wac);
 		}
-
+		//把当前上下文保存到ServletContext中去，使用的属性名和当前的Servlet名是相关的
 		if (this.publishContext) {
 			// Publish the context as a servlet context attribute.
 			String attrName = getServletContextAttributeName();
@@ -388,9 +391,10 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 					"': custom WebApplicationContext class [" + getContextClass().getName() +
 					"] is not of type ConfigurableWebApplicationContext");
 		}
-
+		//实例化需要的具体上下文对象，并为这个上下文对象设置属性，默认是XmlWebApplicationContext
 		ConfigurableWebApplicationContext wac =
 				(ConfigurableWebApplicationContext) BeanUtils.instantiateClass(getContextClass());
+		//设置双亲上下文，也就是在ContextLoader中建立的根上下文
 		wac.setParent(parent);
 		wac.setServletContext(getServletContext());
 		wac.setServletConfig(getServletConfig());
@@ -399,6 +403,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		wac.addApplicationListener(new SourceFilteringListener(wac, this));
 
 		postProcessWebApplicationContext(wac);
+		//容器的初始化过程
 		wac.refresh();
 
 		return wac;

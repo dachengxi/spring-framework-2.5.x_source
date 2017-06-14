@@ -31,6 +31,8 @@ import javax.servlet.ServletContextListener;
  * @since 17.02.2003
  * @see ContextLoaderServlet
  * @see org.springframework.web.util.Log4jConfigListener
+ * 在Web容器中建立ioc容器
+ * 由它启动的上下文为根上下文
  */
 public class ContextLoaderListener implements ServletContextListener {
 
@@ -42,6 +44,7 @@ public class ContextLoaderListener implements ServletContextListener {
 	 */
 	public void contextInitialized(ServletContextEvent event) {
 		this.contextLoader = createContextLoader();
+		//初始化WebApplicationContext
 		this.contextLoader.initWebApplicationContext(event.getServletContext());
 	}
 

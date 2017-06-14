@@ -62,12 +62,15 @@ import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 public class XmlWebApplicationContext extends AbstractRefreshableWebApplicationContext {
 
 	/** Default config location for the root context */
+	//设置默认BeanDefinition的地方
 	public static final String DEFAULT_CONFIG_LOCATION = "/WEB-INF/applicationContext.xml";
 
 	/** Default prefix for building a config location for a namespace */
+	//默认配置文件位置
 	public static final String DEFAULT_CONFIG_LOCATION_PREFIX = "/WEB-INF/";
 
 	/** Default suffix for building a config location for a namespace */
+	//默认配置文件后缀名
 	public static final String DEFAULT_CONFIG_LOCATION_SUFFIX = ".xml";
 
 
@@ -76,19 +79,24 @@ public class XmlWebApplicationContext extends AbstractRefreshableWebApplicationC
 	 * @see org.springframework.beans.factory.xml.XmlBeanDefinitionReader
 	 * @see #initBeanDefinitionReader
 	 * @see #loadBeanDefinitions
+	 * 对BeanDefinition信息进行解析
 	 */
 	protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws IOException {
 		// Create a new XmlBeanDefinitionReader for the given BeanFactory.
+		//XmlBeanDefinitionReader解析xml
 		XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
 
 		// Configure the bean definition reader with this context's
 		// resource loading environment.
+		//XmlWebApplicationContext是DefaultResource的子类
 		beanDefinitionReader.setResourceLoader(this);
 		beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(this));
 
 		// Allow a subclass to provide custom initialization of the reader,
 		// then proceed with actually loading the bean definitions.
+		//允许子类为reader配置自定义的初始化过程
 		initBeanDefinitionReader(beanDefinitionReader);
+		//使用定义好的XmlBeanDefinitionReader来载入BeanDefinition
 		loadBeanDefinitions(beanDefinitionReader);
 	}
 
@@ -116,6 +124,7 @@ public class XmlWebApplicationContext extends AbstractRefreshableWebApplicationC
 	 * @see #getConfigLocations
 	 * @see #getResources
 	 * @see #getResourcePatternResolver
+	 * 有多个BeanDefinition的文件定义，需要逐个载入
 	 */
 	protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws BeansException, IOException {
 		String[] configLocations = getConfigLocations();
@@ -130,6 +139,7 @@ public class XmlWebApplicationContext extends AbstractRefreshableWebApplicationC
 	 * The default location for the root context is "/WEB-INF/applicationContext.xml",
 	 * and "/WEB-INF/test-servlet.xml" for a context with the namespace "test-servlet"
 	 * (like for a DispatcherServlet instance with the servlet-name "test").
+	 * 获取Resource位置的地方，使用默认配置位置
 	 */
 	protected String[] getDefaultConfigLocations() {
 		if (getNamespace() != null) {
