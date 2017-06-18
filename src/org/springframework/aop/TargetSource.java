@@ -29,6 +29,8 @@ package org.springframework.aop;
  * <code>TargetSources</code> directly: this is an AOP framework interface.
  *
  * @author Rod Johnson
+ * 目标源，是被代理对象target实例的来源，TargetSource被用于获取当前MethodInvocation所需要的Target，这个Target通过反射的方式被调用
+ * Proxy代理的不是target，而是TargetSource
  */
 public interface TargetSource extends TargetClassAware {
 

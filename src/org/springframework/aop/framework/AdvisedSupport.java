@@ -244,16 +244,21 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 	public final Advisor[] getAdvisors() {
 		return this.advisorArray;
 	}
-
+	//添加到Advisor列表中
 	public void addAdvisor(Advisor advisor) {
+		//获取List的大小，作为添加的位置
 		int pos = this.advisors.size();
+		//指定位置，添加到Advisor列表中
 		addAdvisor(pos, advisor);
 	}
-
+	//将Advisor添加到列表的指定位置
 	public void addAdvisor(int pos, Advisor advisor) throws AopConfigException {
+		//引介通知器
 		if (advisor instanceof IntroductionAdvisor) {
+			//引介通知器需要校验
 			validateIntroductionAdvisor((IntroductionAdvisor) advisor);
 		}
+		//真正添加到列表中的方法
 		addAdvisorInternal(pos, advisor);
 	}
 
@@ -348,8 +353,11 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 			throw new IllegalArgumentException(
 					"Illegal position " + pos + " in advisor list with size " + this.advisors.size());
 		}
+		//添加到Advisor列表的指定位置
 		this.advisors.add(pos, advisor);
+		//更新Advisor数组
 		updateAdvisorArray();
+		//advice变化的时候被调用
 		adviceChanged();
 	}
 

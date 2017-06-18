@@ -877,9 +877,11 @@ public abstract class ClassUtils {
 	 * @param classLoader the ClassLoader that the interfaces need to be visible in
 	 * (may be <code>null</code> when accepting all declared interfaces)
 	 * @return all interfaces that the given object implements as array
+	 * 获取类的所有接口
 	 */
 	public static Class[] getAllInterfacesForClass(Class clazz, ClassLoader classLoader) {
 		Assert.notNull(clazz, "Class must not be null");
+		//本身就是一个接口
 		if (clazz.isInterface()) {
 			return new Class[] {clazz};
 		}
