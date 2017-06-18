@@ -74,6 +74,7 @@ public class AnnotationScopeMetadataResolver implements ScopeMetadataResolver {
 
 	public ScopeMetadata resolveScopeMetadata(BeanDefinition definition) {
 		ScopeMetadata metadata = new ScopeMetadata();
+		//如果是AnnotatedBeanDefinition类型，得到其Annotation元数据，根据元数据中的annotation设置candidate的一些属性
 		if (definition instanceof AnnotatedBeanDefinition) {
 			AnnotatedBeanDefinition annDef = (AnnotatedBeanDefinition) definition;
 			Map<String, Object> attributes =

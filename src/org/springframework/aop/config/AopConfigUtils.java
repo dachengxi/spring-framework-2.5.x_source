@@ -96,6 +96,7 @@ public abstract class AopConfigUtils {
 	}
 
 	public static BeanDefinition registerAspectJAnnotationAutoProxyCreatorIfNecessary(BeanDefinitionRegistry registry, Object source) {
+		//得到AnnotationAwareAspectJAutoProxyCreator类
 		Class cls = getAspectJAnnotationAutoProxyCreatorClassIfPossible();
 		return registerOrEscalateApcAsRequired(cls, registry, source);
 	}

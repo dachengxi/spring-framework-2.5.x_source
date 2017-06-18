@@ -76,12 +76,15 @@ public class ComponentScanBeanDefinitionParser implements BeanDefinitionParser {
 
 
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
+		//base-package
 		String[] basePackages =
 				StringUtils.commaDelimitedListToStringArray(element.getAttribute(BASE_PACKAGE_ATTRIBUTE));
 
 		// Actually scan for bean definitions and register them.
 		ClassPathBeanDefinitionScanner scanner = configureScanner(parserContext, element);
+		//根据指定的base-package进行扫描，找到符合要求的Annotation
 		Set<BeanDefinitionHolder> beanDefinitions = scanner.doScan(basePackages);
+		//向IOC容器注入BeanDefinition
 		registerComponents(parserContext.getReaderContext(), beanDefinitions, element);
 
 		return null;

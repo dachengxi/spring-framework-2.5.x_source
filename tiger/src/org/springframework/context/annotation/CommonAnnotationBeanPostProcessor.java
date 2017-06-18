@@ -296,9 +296,10 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 
 	public PropertyValues postProcessPropertyValues(
 			PropertyValues pvs, PropertyDescriptor[] pds, Object bean, String beanName) throws BeansException {
-
+		//获取要注入的资源元数据
 		InjectionMetadata metadata = findResourceMetadata(bean.getClass());
 		try {
+			//处理注解，内部使用jsr注解注入
 			metadata.injectMethods(bean, beanName, pvs);
 		}
 		catch (Throwable ex) {

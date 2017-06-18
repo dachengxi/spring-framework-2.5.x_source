@@ -1002,17 +1002,20 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 			pvs = newPvs;
 		}
-
+		//需要在初始化之前就被执行的，一般注解需要在这里注入
 		boolean hasInstAwareBpps = hasInstantiationAwareBeanPostProcessors();
 		boolean needsDepCheck = (mbd.getDependencyCheck() != RootBeanDefinition.DEPENDENCY_CHECK_NONE);
 
 		if (hasInstAwareBpps || needsDepCheck) {
 			PropertyDescriptor[] filteredPds = filterPropertyDescriptorsForDependencyCheck(bw);
+			//存在初始化之前就要被执行的BeanPostProcessor
 			if (hasInstAwareBpps) {
 				for (Iterator it = getBeanPostProcessors().iterator(); it.hasNext(); ) {
 					BeanPostProcessor beanProcessor = (BeanPostProcessor) it.next();
+					//InstantiationAwareBeanPostProcessor类型的bean
 					if (beanProcessor instanceof InstantiationAwareBeanPostProcessor) {
 						InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) beanProcessor;
+						//注解可能在CommonAnnotationBeanPostProcessor中实现
 						pvs = ibp.postProcessPropertyValues(pvs, filteredPds, bw.getWrappedInstance(), beanName);
 						if (pvs == null) {
 							return;

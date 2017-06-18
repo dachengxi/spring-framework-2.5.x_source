@@ -42,6 +42,7 @@ import org.springframework.beans.PropertyValues;
  * @since 1.2
  * @see org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator#setCustomTargetSourceCreators
  * @see org.springframework.aop.framework.autoproxy.target.LazyInitTargetSourceCreator
+ * 在初始化之前就会被执行
  */
 public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor {
 

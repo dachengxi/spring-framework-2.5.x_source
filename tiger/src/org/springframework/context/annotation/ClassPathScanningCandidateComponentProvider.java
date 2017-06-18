@@ -163,6 +163,7 @@ public class ClassPathScanningCandidateComponentProvider implements ResourceLoad
 	 * {@link Component @Component} meta-annotation including the
 	 * {@link Repository @Repository}, {@link Service @Service}, and
 	 * {@link Controller @Controller} stereotype annotations.
+	 * 将@Component加入到filter中
 	 */
 	protected void registerDefaultFilters() {
 		this.includeFilters.add(new AnnotationTypeFilter(Component.class));
@@ -177,17 +178,22 @@ public class ClassPathScanningCandidateComponentProvider implements ResourceLoad
 	public Set<BeanDefinition> findCandidateComponents(String basePackage) {
 		Set<BeanDefinition> candidates = new LinkedHashSet<BeanDefinition>();
 		try {
+			//com.abc --> classpath*:com/abc/**/*.class
+			//* --> classpath*:*/**/*.class
 			String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX +
 					resolveBasePackage(basePackage) + "/" + this.resourcePattern;
 			Resource[] resources = this.resourcePatternResolver.getResources(packageSearchPath);
 			boolean traceEnabled = logger.isTraceEnabled();
 			boolean debugEnabled = logger.isDebugEnabled();
+			//对得到的Resource对象通过ASM工具分析其Annotation元素
+			//并构造MetadataReader对象，并将Annotation信息封装到AnnotationMetadata类型的annotationMetadata属性中
 			for (int i = 0; i < resources.length; i++) {
 				Resource resource = resources[i];
 				if (traceEnabled) {
 					logger.trace("Scanning " + resource);
 				}
 				if (resource.isReadable()) {
+					//通过ASM创建元数据reader
 					MetadataReader metadataReader = this.metadataReaderFactory.getMetadataReader(resource);
 					if (isCandidateComponent(metadataReader)) {
 						ScannedGenericBeanDefinition sbd = new ScannedGenericBeanDefinition(metadataReader);

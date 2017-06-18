@@ -198,13 +198,16 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 	protected Set<BeanDefinitionHolder> doScan(String... basePackages) {
 		Set<BeanDefinitionHolder> beanDefinitions = new LinkedHashSet<BeanDefinitionHolder>();
 		for (int i = 0; i < basePackages.length; i++) {
+			//根据base-package找到找到匹配的类
 			Set<BeanDefinition> candidates = findCandidateComponents(basePackages[i]);
+
 			for (BeanDefinition candidate : candidates) {
 				String beanName = this.beanNameGenerator.generateBeanName(candidate, this.registry);
 				if (candidate instanceof AbstractBeanDefinition) {
 					postProcessBeanDefinition((AbstractBeanDefinition) candidate, beanName);
 				}
 				ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(candidate);
+				//查询registry的beanDefinitionMap属性容器，如果不包含candidate的beanName元素，则通过candidate以及beanName构造一个BeanDefinitionHolder对象
 				if (checkCandidate(beanName, candidate)) {
 					BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(candidate, beanName);
 					definitionHolder = applyScope(definitionHolder, scopeMetadata);
